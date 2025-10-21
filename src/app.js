@@ -1,121 +1,98 @@
 // BACKEND
 
 const express = require('express');
+const knex = require('knex');
  
 const app = express();
 app.use(express.json());
 
-const cities = {
-    'Zaragoza': {
-        altitude: 199,
-        population: 673010,
-        capital: true
+const db = knex({
+    client: 'sqlite3',
+    connection: {
+        filename: 'cities.db'
     },
-    'Huesca': {
-        altitude: 488,
-        population: 53305,
-        capital: false
-    },
-    'Teruel': {
-        altitude: 915,
-        population: 25900,
-        capital: false
-    },
-};
+    useNullAsDefault: true
+})
 
 // Nota: req = request (lo que envía el cliente), res = response (lo que responde el servidor).
 
 // Definimos una ruta GET en la URL /cities
-app.get('/cities', (req, res) => {
-    res.json(cities);
+app.get('/cities', async (req, res) => {
+    
+    const cities = await db('cities').select("*");
+
+    res.status(200).json(cities);
 });
 
 // Definimos una ruta GET en la URL /cities/:city
-app.get('/cities/:city', (req, res) => {
-    const city = req.params.city;
-    res.json(cities[city]);
+app.get('/cities/:id', async (req, res) => {
+    
+    const id = req.params.id;
+    //TODO Comprobar que la ciudad existe y devolver un 404 si no está.
+    // TODO Añadir de filtrar por nombre de ciudad.
+
+    const city = await db('cities').select('*').where({id: id}).first();
+
+    res.status(200).json(city);
 });
 
 // Definimos una ruta POST en la URL /cities
-app.post('/cities', (req, res) => {
+app.post('/cities', async (req, res) => {
     
     // Extraemos los valores enviados en el cuerpo de la petición (JSON)
     const name = req.body.name; // Obtenemos el nombre de la ciudad.
+    //TODO Comprobar que altitude y population son de tipo entero.
     const altitudeValue = req.body.altitude; // Obtenemos el valor de la altitud.
     const populationValue = req.body.population; // Obtenemos el valor de la población.
     const capital = req.body.capital; // Obtenemos el valor de la capital.
 
     // Guardamos la ciudad en el objeto "cities", usando el nombre como clave.
     // Ejemplo: cities["Madrid"] = { altitude: 667, population: 3223000 }
-    cities[name] = {
+    const newCity = await db('cities').insert ({
+        name: name,
         altitude: altitudeValue,
         population: populationValue,
         capital: capital
-    };
+    });
 
     // Respondemos al cliente con un estado HTTP 201 (Created).
     // Esto significa que el recurso (la ciudad) se creó con éxito.
-    res.status(201).end();
+    res.status(201).json(newCity);
 });
 
 // Definimos una ruta PUT en la URL /cities/:city
-app.put('/cities/:city', (req, res) => {
+app.put('/cities/:id', async (req, res) => {
 
-    // Obtenemos el nombre de la ciudad desde la URL.
-    const name = req.params.city;
+    const id = req.params.city;
+    //TODO Comprobar si existe la ciudad.
     
     // Datos de altitud y población que llegan desde el cuerpo.
+    const name = req.body.name
     const altitudeValue = req.body.altitude; // Obtenemos el valor de la altitud.
     const populationValue = req.body.population; // Obtenemos el valor de la población.
     const capital = req.body.capital; // Obtenemos el valor de la capital.
+
+    await db('cities').where({id: id}).update({
+        name: name,
+        altitude: altitudeValue,
+        population: populationValue,
+        capital: capital
+    });
+
+    res.status(204).end();
  
-    // Comprobamos si la ciudad existe.
-    if (cities[name]) {
-
-        // Actualizamos los datos segun los nuevos valores.
-        cities[name].altitude = altitudeValue;
-        cities[name].population = populationValue;
-        cities[name].capital = capital;
-
-        /*
-         *  cities[name] = {
-         *      altitude = altitudeValue;
-         *      population = populationValue;
-         *      capital = capital;  
-         *  }
-         */
-        
-        // Respondemos con 200 (OK).
-        res.status(204).end();
-     
-    } else {
-
-        // Si la ciudad NO existe, respondemos con un 404 (Not found).
-        res.status(404).end();
-        
-    }
 })
  
 // Definimos una ruta DELETE en la URL /cities/:city
-app.delete('/cities/:city', (req, res) => {
+app.delete('/cities/:id', async (req, res) => {
 
-    // params --> Sacamos la city de la URL.
-    const name = req.params.city; 
+    const id  = req.params.id;
+    //TODO Comprobar que la ciudad existe.
+    
+    await db('cities').where({id: id}).del();
 
-    // Comprobamos si la ciudad que hemos obtenido existe en el objeto.
-    if (cities[name]) {
+    res.status(204).end();
 
-        // Si la ciudad existe en el objeto, la eliminamos.
-        delete cities[name];
-
-        // Respondemos con 204 (OK no content, ya que lo borro y no me devulve nada)
-        res.status(204).end();
-
-    } else {
-
-        // Si la ciudad no existe, devolvemos un error 404 (Not Found)
-        res.status(404).end();
-    }
 });
  
 app.listen(8080, () => {
