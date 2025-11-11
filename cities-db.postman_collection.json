@@ -1,0 +1,113 @@
+{
+	"info": {
+		"_postman_id": "d447a8cb-d534-4601-8736-41a8f1445e02",
+		"name": "cities-db",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "48704004",
+		"_collection_link": "https://diegopuertolas-2807111.postman.co/workspace/Diego-Pu%C3%A9rtolas-Ruiz's-Workspac~2a897af7-2231-408f-8ec5-0b1cfdc1a866/collection/48704004-d447a8cb-d534-4601-8736-41a8f1445e02?action=share&source=collection_link&creator=48704004"
+	},
+	"item": [
+		{
+			"name": "/cities",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "/cities/:id",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "/cities",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Cadrete\",\n    \"altitude\": 310,\n    \"population\": 3700,\n    \"capital\": false\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/cities",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"cities"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/cities/:name",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"altitude\": 1000,\n    \"population\": 43000,\n    \"capital\": false\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/cities/Teruel",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"cities",
+						"Teruel"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/cities/:id",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/cities/Teruel",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"cities",
+						"Teruel"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
