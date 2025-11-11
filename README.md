@@ -1,18 +1,18 @@
-# **cities** 🏙️
+# **cities-api-db** 🏙️ #
 
-## Proyecto de Entornos de Desarrollo, trabajar con Nodejs.
-
-### Diego Puértolas Ruiz, 1SW
+## Proyecto de Entornos de Desarrollo. ##
+### Trabajar con Node.js, una base de datos SQLite y knex como librería para gestionar el acceso a la base de datos. ###
 
 ---
 
-## Iniciación
+## API de ciudades con las siguientes funcionalidades: ##
 
-1. Instalamos **[Node.js](https://nodejs.org/en)**
-2. Comprobamos que se ha instalado correctamente ejecutando `node` en la terminal de VSCode o del sistema.
-3. Instalamos Express `npm install express`.
-   - Express es una dependecia de Node.
-4. Creamos la carpeta `src`
-   - Es el lugar en el que vamos a guardar el código.
-5. Dentro de `src` creamos el archivo `app.js`.
-   - Archivo en el que vamos a empezar a escribir código.
+- **CRUD COMPLETO**
+   - GET `/cities`
+   - GET `/cities/:id`
+   - POST `/cities`
+   - PUT `/cities/:id`
+   - DELETE `/cities/:id`
+- Utiliza una base de datos *SQLite* (no incluida en el repositorio) que contiene una tabla **`cities`** con las columnas: `id`, `name`, `population`, `altitude` y `capital`.
+- Utiliza la libreria **`knex`** para gestionar el acceso a la base de datos.
+- Control de errores.
